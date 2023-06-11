@@ -38,57 +38,64 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/v1/events")
 public class EventController {
 
-	private final EventReadService eventReadService;
+    private final EventReadService eventReadService;
 
-	private final EventCreateService eventCreateService;
+    private final EventCreateService eventCreateService;
 
-	private final EventParticipateService eventParticipateService;
+    private final EventParticipateService eventParticipateService;
 
-	@GetMapping
-	public CommonApiResponse<List<OrganizersEventResponse>> getEvents(@AuthenticationPrincipal Long userId,
-		@PageableDefault(page = 0, size = 100) Pageable pageable) {
-		List<OrganizersEventResponse> response = eventReadService.getEvents(userId, pageable);
-		return CommonApiResponse.ok(response);
-	}
+    @GetMapping
+    public CommonApiResponse<List<OrganizersEventResponse>> getEvents(
+            @AuthenticationPrincipal Long userId,
+            @PageableDefault(page = 0, size = 100) Pageable pageable
+    ) {
+        List<OrganizersEventResponse> response = eventReadService.getEvents(userId, pageable);
+        return CommonApiResponse.ok(response);
+    }
 
-	@GetMapping("/participate/me")
-	public CommonApiResponse<List<ReadParticipateEventsResponse>> getParticipationEvents(@AuthenticationPrincipal Long userId,
-		@PageableDefault(page = 0, size = 100) Pageable pageable) {
-		List<ReadParticipateEventsResponse> response = eventReadService.getParticipationEvents(userId, pageable);
-		return CommonApiResponse.ok(response);
-	}
+    @GetMapping("/participate/me")
+    public CommonApiResponse<List<ReadParticipateEventsResponse>> getParticipationEvents(
+            @AuthenticationPrincipal Long userId,
+            @PageableDefault(page = 0, size = 100) Pageable pageable
+    ) {
+        List<ReadParticipateEventsResponse> response = eventReadService.getParticipationEvents(userId, pageable);
+        return CommonApiResponse.ok(response);
+    }
 
-	@PostMapping
-	public CommonApiResponse<RegisterEventResponse> registerEvent(
-		@Valid @RequestBody RegisterEventRequest request,
-		@AuthenticationPrincipal Long userId) {
-		RegisterEventResponse response = eventCreateService.createEvent(userId, request);
-		return CommonApiResponse.<RegisterEventResponse>ok(response);
-	}
+    @PostMapping
+    public CommonApiResponse<RegisterEventResponse> registerEvent(
+            @Valid @RequestBody RegisterEventRequest request,
+            @AuthenticationPrincipal Long userId
+    ) {
+        RegisterEventResponse response = eventCreateService.createEvent(userId, request);
+        return CommonApiResponse.<RegisterEventResponse>ok(response);
+    }
 
-	@GetMapping("/participate/{eventCode}")
-	public CommonApiResponse<ReadCurrentParticipateEventResponse> readCurrentParticipateEvent(
-		@PathVariable("eventCode") String eventCode,
-		@AuthenticationPrincipal Long userId) {
-		ReadCurrentParticipateEventResponse response = eventReadService.getParticipateEvent(userId, eventCode);
-		return CommonApiResponse.<ReadCurrentParticipateEventResponse>ok(response);
-	}
+    @GetMapping("/participate/{eventCode}")
+    public CommonApiResponse<ReadCurrentParticipateEventResponse> readCurrentParticipateEvent(
+            @PathVariable("eventCode") String eventCode,
+            @AuthenticationPrincipal Long userId
+    ) {
+        ReadCurrentParticipateEventResponse response = eventReadService.getParticipateEvent(userId, eventCode);
+        return CommonApiResponse.<ReadCurrentParticipateEventResponse>ok(response);
+    }
 
-	@PostMapping("/participate")
-	public CommonApiResponse<ParticipateEventResponse> participateEvent(
-		@Valid @RequestBody ParticipateEventRequest request,
-		@AuthenticationPrincipal Long userId) {
-		ParticipateEventResponse response = eventParticipateService.participateEvent(userId, request.getCode());
-		return CommonApiResponse.<ParticipateEventResponse>ok(response);
-	}
+    @PostMapping("/participate")
+    public CommonApiResponse<ParticipateEventResponse> participateEvent(
+            @Valid @RequestBody ParticipateEventRequest request,
+            @AuthenticationPrincipal Long userId
+    ) {
+        ParticipateEventResponse response = eventParticipateService.participateEvent(userId, request.getCode());
+        return CommonApiResponse.<ParticipateEventResponse>ok(response);
+    }
 
-	@GetMapping("/{eventCode}")
-	public CommonApiResponse<ReadEventResponse> readEvent(
-		@PathVariable("eventCode") String eventCode,
-		@AuthenticationPrincipal Long userId
-	) {
-		ReadEventResponse response = eventReadService.getEvent(userId, eventCode);
-		return CommonApiResponse.ok(response);
-	}
+    @GetMapping("/{eventCode}")
+    public CommonApiResponse<ReadEventResponse> readEvent(
+            @PathVariable("eventCode") String eventCode,
+            @AuthenticationPrincipal Long userId
+    ) {
+        ReadEventResponse response = eventReadService.getEvent(userId, eventCode);
+        return CommonApiResponse.ok(response);
+    }
 
 }

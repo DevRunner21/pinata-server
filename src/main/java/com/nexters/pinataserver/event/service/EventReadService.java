@@ -52,11 +52,6 @@ public class EventReadService {
 		// 이벤트 참가 가능한 이벤트인지 검증
 		eventValidateService.validateCanParticipate(participantId, foundEvent);
 
-		// 본인이 생성한 이벤트 참가 불가
-		if (Objects.equals(participantId, foundEvent.getOrganizerId())) {
-			throw NotParticipateTargetException.TARGET.getResponseException();
-		}
-
 		return convertToReadCurrentParticipateEventResponse(foundEvent);
 	}
 

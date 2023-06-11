@@ -1,7 +1,9 @@
 package com.nexters.pinataserver.event.service;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
+import com.nexters.pinataserver.common.exception.e4xx.NotParticipateTargetException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +26,6 @@ public class EventValidateService {
 
     @Transactional
     public void validateCanParticipate(Long participantId, Event foundEvent) {
-
         // 이미 참가한 이벤트인지 검증
         checkAlreadyParticipate(participantId, foundEvent.getId());
 
@@ -33,6 +34,9 @@ public class EventValidateService {
 
         // 이벤트 상태가 참가 가능한 이벤트 인가??
         checkEventStatus(foundEvent);
+
+        // 본인이 생성한 이벤트 참가 불가
+        checkEventOwner(participantId, foundEvent);
     }
 
     private void checkAlreadyParticipate(Long participantId, Long eventId) {
@@ -68,6 +72,12 @@ public class EventValidateService {
         }
         if (status.isCancel()) {
             throw EventStatusException.CANCEL.get();
+        }
+    }
+
+    private static void checkEventOwner(Long participantId, Event foundEvent) {
+        if (Objects.equals(participantId, foundEvent.getOrganizerId())) {
+            throw NotParticipateTargetException.TARGET.getResponseException();
         }
     }
 
